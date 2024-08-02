@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org" lang="vi">
+
+<head>
+    <meta charset="utf-8">
+    <title>Condition - Softy Bakery</title>
+    <th:block th:insert="~{layout :: css-link}"></th:block>
+    <style>
+        .nav-item {
+            margin: 5px;
+        }
+        .btn {
+            
+            width: 180px;
+        }
+    </style>
+</head>
+
+<body ng-app="app" ng-controller="UserPurchaseController" class="bg-light">
+    <div th:insert="~{layout :: topbar}"></div>
+    <div th:insert="~{layout :: navbar}"></div>
+    <!-- Page Header Start -->
+    <div class="container-fluid page-header py-6 wow fadeIn" data-wow-delay="0.1s">
+        <div class="container text-center pt-5 pb-3">
+            <nav aria-label="breadcrumb animated slideInDown">
+            </nav>
+        </div>
+    </div>
+    <!-- Page Header End -->
+    <!-- purchase  -->
+    <!-- Order Start -->
+    <div class="container my-5">
+        <div class="row">
+            <!-- profile -->
+            <div class="col-lg-3 p-4" style="border-radius: 10px; background-color: white;">
+                <a th:href="${'/images/accountPhoto/'+user.photo}" >
+                    <img th:src="${'/images/accountPhoto/'+user.photo}" class="card-img-top" style="border-radius: 8px;">
+                </a>
+                <div class="card-body">
+                    <p class="card-text"><a href="/profile"><strong th:text="${user.fullName}"
+                                class="card-text"></strong></a></p>
+                    <hr>
+                    <p class="card-text"><Strong>Phone: </Strong><span th:text=" ${user.phoneNumber} "></span></p>
+                    <p class="card-text"><strong>Address: </strong><span th:text=" ${user.address} "> </span></p>
+                </div>
+                <div class="text-end">
+                    <small><a href="/profile/edit" class="text-black-50" style="text-decoration: underline;">Edit
+                            Profile</a></small>
+                </div>
+            </div>
+
+            <!-- tablist -->
+            <div class="col-lg-9 p-4">
+                <ul class="nav nav-pills">
+                    <li class="nav-item">
+                        <button class="tab nav-link" style="width: 100px;" ng-click="applyFilter('All')"
+                            ng-class="{ 'active': filterOptions === 'All' }">Tất cả</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="tab nav-link" style="width: 150px;" ng-click="applyFilter('PENDING')"
+                            ng-class="{ 'active': filterOptions === 'PENDING' }">Chờ xác nhận</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="tab nav-link" style="width: 150px;" ng-click="applyFilter('CONFIRMED')"
+                            ng-class="{ 'active': filterOptions === 'CONFIRMED' }">Đã xác nhận</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="tab nav-link" style="width: 150px;" ng-click="applyFilter('OUT_FOR_DELIVERY')"
+                            ng-class="{ 'active': filterOptions === 'OUT_FOR_DELIVERY' }">Đang chuẩn bị</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="tab nav-link" style="width: 150px;" ng-click="applyFilter('DELIVERING')"
+                            ng-class="{ 'active': filterOptions === 'DELIVERING' }">Đang vận chuyển</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="tab nav-link" style="width: 150px;" ng-click="applyFilter('SHIPPING')"
+                            ng-class="{ 'active': filterOptions === 'SHIPPING' }">Đang giao</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="tab nav-link" style="width: 150px;" ng-click="applyFilter('DELIVERED')"
+                            ng-class="{ 'active': filterOptions === 'DELIVERED' }">Hoàn thành</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="tab nav-link" style="width: 150px;" ng-click="applyFilter('PROCCESSING')"
+                            ng-class="{ 'active': filterOptions === 'PROCCESSING' }">Đang xử lí</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="tab nav-link" style="width: 150px;" ng-click="applyFilter('CANCELED')"
+                            ng-class="{ 'active': filterOptions === 'CANCELED' }">Đã hủy</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="tab nav-link" style="width: 150px;" ng-click="applyFilter('ERROR')"
+                            ng-class="{ 'active': filterOptions === 'ERROR' }">Lỗi</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="tab nav-link" style="width: 150px;" ng-click="applyFilter('REFUNDED')"
+                            ng-class="{ 'active': filterOptions === 'REFUNDED' }">Đã hoàn tiền</button>
+                    </li>
+                </ul>
+
+                <div ng-repeat="order in filteredOrders" style="margin: 20px;">
+                    <div class="card">
+                        <div class="row g-0">
+                            <div class="col-md-4 pt-2 pb-3">
+                                <small class="card-text m-2">OrderID:
+                                    {{order.orderId}}</small>
+                            </div>
+                            <div class="col-md-8 pt-2 pb-3">
+                                <p class="card-text float-end me-2"><span>Trạng thái:</span>
+                                    <strong>{{order.status}}</strong>
+                                </p>
+                            </div>
+                            <hr />
+                            <div class="col-md-12 d-flex flex-row" ng-repeat="item in order.orderItems">
+                                <div class="card mb-3 m-3">
+                                    <div class="card-item">
+                                        <a href="/product/detail/{{item.product.productId}}">
+                                            <img ng-src="/images/{{ item.product.productImages[0].imageUrl}}"
+                                            style="height: 120px; width: auto;">
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div class="card-body" style="font-family: Arial, sans-serif;">
+                                    <strong class="card-title">{{item.product.productName}}</strong>
+                                    <div class="card-text">
+                                        <small class="text-body-secondary">Phân loại hàng:</small>
+                                        <strong>{{item.product.category.categoryName}}</strong>
+                                        <div class="row">
+                                            <div class="col">
+                                                <small class="text-body-secondary">SL:</small>
+                                                <strong>{{item.quantity}}</strong>
+                                                x
+                                                <small class="text-body-secondary">Đơn giá:</small>
+                                                <strong>{{ item.product.price |
+                                                    vndCurrency}}</strong>
+                                            </div>
+                                            <div class="col text-end">
+                                                <strong style="font-size: large;">{{item.price * item.quantity | vndCurrency}}</strong>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <span class="text-end" style="padding: 10px; padding-right: 30px;">Thành tiền: <strong>{{getAmount(order.orderItems) | vndCurrency}}</strong></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    <!-- Order End -->
+
+    <div th:insert="~{layout :: footer}"></div>
+    <div th:insert="~{layout :: copyright}"></div>
+    <div th:insert="~{layout :: js-link}"></div>
+
+</body>
+
+</html>

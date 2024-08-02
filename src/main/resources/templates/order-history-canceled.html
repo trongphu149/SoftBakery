@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org" lang="vi">
+
+<head>
+    <meta charset="utf-8">
+    <title>Condition - Softy Bakery</title>
+    <title>condition - Softy Bakery</title>
+    <th:block th:insert="~{layout :: css-link}"></th:block>
+    <style>
+
+
+
+    </style>
+</head>
+
+<body ng-app="app" ng-controller="OrderCanceled">
+    <div th:insert="~{layout :: topbar}"></div>
+    <div th:insert="~{layout :: navbar}"></div>
+    <!-- Page Header Start -->
+    <div class="container-fluid page-header py-6 wow fadeIn" data-wow-delay="0.1s">
+        <div class="container text-center pt-5 pb-3">
+            <nav aria-label="breadcrumb animated slideInDown">
+            </nav>
+        </div>
+    </div>
+    <!-- Page Header End -->
+    <!-- purchase  -->
+    <!-- Order Start -->
+    <div class="container my-5">
+        <div class="row">
+            <!-- profile -->
+            <div class="col-lg-3 p-4">
+                <div class="card p-4">
+                    <img th:src="${'/images/accountPhoto/'+user.photo}" class="card-img-top ">
+                    <div class="card-body">
+                        <p class="card-text"><a href="/profile"><strong th:text="${user.fullName}"
+                                    class="card-text"></strong></a></p>
+                        <a href="/profile/edit">Edit Profile</a>
+                        <hr>
+                        <p class="card-text"><Strong>Phone: </Strong><span th:text=" ${user.phoneNumber} "></span></p>
+                        <p class="card-text"><strong>Addrest: </strong><span th:text=" ${user.address} "> </span></p>
+                    </div>
+                </div>
+            </div>
+            <!-- tablist -->
+        
+            <div class="col-lg-9 p-4">
+                <ul class="nav nav-pills mb-3 d-flex justify-content-center" id="pills-tab" role="tablist">
+
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="pills-all-tab" data-bs-toggle="pill"
+                            data-bs-target="#pills-all" type="button" role="tab" aria-controls="pills-all"
+                            aria-selected="true" style="color: black;"> <a href="history">Tất cả</a></button>
+                    </li>
+
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-topay-tab" data-bs-toggle="pill"
+                            data-bs-target="#pills-topay" type="button" role="tab" aria-controls="pills-topay"
+                            aria-selected="false" style="color: black;"> <a href="pending">Chờ thanh toán</a></button>
+                    </li>
+
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-toship-tab" data-bs-toggle="pill"
+                            data-bs-target="#pills-toship" type="button" role="tab" aria-controls="pills-toship"
+                            aria-selected="false" style="color: black;"><a href="shipping">Vận chuyển</a></button>
+                    </li>
+
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-toreceive-tab" data-bs-toggle="pill"
+                            data-bs-target="#pills-toreceive" type="button" role="tab" aria-controls="pills-toreceive"
+                            aria-selected="false" style="color: black;"><a href="delyvering">Đang giao</a> </button>
+                    </li>
+
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-complete-tab" data-bs-toggle="pill"
+                            data-bs-target="#pills-complete" type="button" role="tab" aria-controls="pills-complete"
+                            aria-selected="false" style="color: black;"><a href="comfi">Hoàn thành</a></button>
+                    </li>
+
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-cancelled-tab" data-bs-toggle="pill"
+                            data-bs-target="#pills-cancelled" type="button" role="tab" aria-controls="pills-cancelled"
+                            aria-selected="false" style="color: black;"><a href="cancel"> Đã hủy</a></button>
+                    </li>
+
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-refund-tab" data-bs-toggle="pill"
+                            data-bs-target="#pills-refund" type="button" role="tab" aria-controls="pills-refund"
+                            aria-selected="false" style="color: black;"><a href="refun">Trả tiền/Hoàn tiền</a> </button>
+                    </li>
+                  
+                </ul>
+                <div class="">
+                    <div class="" ng-repeat="order in OrderList">
+                        <div class="card" ng-repeat="item in order.orderItems">
+                            <div class="row g-0">
+                                <div class="col-md-4 pt-2 pb-3">
+                                    <strong class="card-text m-2" style="font-family: Arial, sans-serif;">OrderID: {{order.orderId}}</strong>
+                                </div>
+                                <div class="col-md-8 pt-2 pb-3">
+                                    <strong class="card-text float-end me-2" style="font-family: Arial, sans-serif;">Trạng thái: {{order.status}}</strong>
+                                </div>
+                                <hr class="">
+                                <div class="col-md-12 d-flex flex-row">
+                                    <div class="card mb-3 m-3">
+                                        <img ng-src="/images/{{ item.product.productImages[0].imageUrl }}" class="img-fluid rounded-start card-body" style="max-width: 100px; height: auto;" alt="Product Image">
+                                    </div>
+                                    <div class="card-body" style="font-family: Arial, sans-serif;">
+                                        <h5 class="card-title">{{item.product.productName}}</h5>
+                                        <p class="card-text"><small class="text-body-secondary">Phân loại hàng: {{item.product.category.categoryName}}</small></p>
+                                        <div class="d-flex justify-content-between align-items-end">
+                                            <p class="card-text"><small class="text-body-secondary">{{item.quantity}}</small></p>
+                                            <p class="card-text ps-2">
+                                                <strong class="text-danger">đ</strong>
+                                                <span class="text-danger">{{ item.product.price }}</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="">
+                                    <hr class="m-2">
+                                    <div class="card-text me-3 pb-2" style="font-family: Arial, sans-serif;">
+                                        <div class="d-flex flex-column align-items-end">
+                                            <p class="card-text ps-2 text-end mb-0">
+                                                <strong class="text-danger">Thành tiền: đ</strong>
+                                                <span class="text-danger">{{ item.product.price * item.quantity }}</span>
+                                            </p>
+                                            <button type="button" class="btn btn-outline-primary mt-2" ng-click="rebuyItem(item.product.productId)">Mua lại</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+               
+                            <!-- end -->
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="pills-topay" role="tabpanel" aria-labelledby="pills-topay-tab"
+                        tabindex="0">
+                        <p>to pay</p>
+                    </div>
+
+                    <div class="tab-pane fade" id="pills-toship" role="tabpanel" aria-labelledby="pills-toship-tab"
+                        tabindex="0">
+                        <p>to ship</p>
+                    </div>
+
+                    <div class="tab-pane fade" id="pills-toreceive" role="tabpanel"
+                        aria-labelledby="pills-toreceive-tab" tabindex="0">
+                        <p>to receive</p>
+                    </div>
+
+                    <div class="tab-pane fade" id="pills-complete" role="tabpanel" aria-labelledby="pills-complete-tab"
+                        tabindex="0">
+                        <p>complete</p>
+                    </div>
+
+                    <div class="tab-pane fade" id="pills-cancelled" role="tabpanel"
+                        aria-labelledby="pills-cancelled-tab" tabindex="0">
+                        <p>cancelled</p>
+                    </div>
+
+                    <div class="tab-pane fade" id="pills-refund" role="tabpanel" aria-labelledby="pills-refund-tab"
+                        tabindex="0">
+                        <p>refund</p>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+   
+        <!-- Order End -->
+
+        <div th:insert="~{layout :: footer}"></div>
+        <div th:insert="~{layout :: copyright}"></div>
+        <div th:insert="~{layout :: backtotop}"></div>
+        <div th:insert="~{layout :: js-link}"></div>
+
+</body>
+
+</html>
